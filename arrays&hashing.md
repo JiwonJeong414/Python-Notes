@@ -17,6 +17,7 @@ class Solution:
 ```
 
 Time Complexity: O(n)
+
 Space Complexity: O(n)
 
 ## Valid Anagram
@@ -39,6 +40,7 @@ class Solution:
 ```
 
 Time Complexity: O(n)
+
 Space Complexity: 3O(n) = O(n)
 
 ## Two Sum
@@ -62,4 +64,5 @@ class Solution:
 ```
 
 Time Complexity: O(n)
+
 Space complexity: O(n)
