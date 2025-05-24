@@ -51,9 +51,11 @@ class Solution:
         
         # One pass through the array
         for i, num in enumerate(nums):
+            # find the complement and check if that exists in the HashMap
             complement = target - num
             if complement in numMap:
                 return [numMap[complement], i]
+            # add it to the dict if the complement of the thing doesn't exist
             numMap[num] = i
             
         return []  # No solution found
