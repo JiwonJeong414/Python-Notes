@@ -76,3 +76,4 @@ print(f"Pi rounded to 2 decimal places: {pi:.2f}")  # Number formatting
 
 # Null
 # ---
+x = None # you can't have x
