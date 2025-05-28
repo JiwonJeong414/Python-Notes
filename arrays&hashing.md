@@ -1,6 +1,6 @@
 # Arrays & Hashing
 
-### Day 1
+# Day 1
 
 ## Contains Duplicate
 
@@ -69,7 +69,7 @@ Time Complexity: O(n)
 
 Space complexity: O(n)
 
-### Day 2
+# Day 2
 
 ## Group Anagrams
 
@@ -123,3 +123,99 @@ Space Complexity: O(n * k)
 ## Top K Frequent Elements
 
 ** BUCKET SORT **
+
+Bucket sort is a sorting algorithm that works by distributing elements into a number of buckets, then sorting each bucket individually. It's particularly useful when the input is uniformly distributed over a range.
+
+### How it Works:
+1. Create n empty buckets
+2. Put each element in its corresponding bucket
+3. Sort each bucket individually
+4. Concatenate all buckets
+
+### Data Structure:
+an array of arrays (just like the implementation of a HashMap)
+
+For this question, I first used a sorting method where I populated the hashMap with keys as the num values and the value as the frequency of that certain num value happening in that nums array. And then I used a complex lambda function to grab the top k elements using the only the frequencies as the reference. However, this solution is O(n log n) which is not optimal.
+
+Therefore, we use a bucket sort. Since we know that the frequencies for a certain value cannot exceed the length of the nums array, we create a bucket and each index represents the frequencies of a certain number. And in that index, we store a list of all the numbers that have that specific frequency. Then, we decrement from the top and grab the top k elements, ignoring the empty lists.
+
+### Sorting
+
+```python
+class Solution:
+    def topKFrequent(self, nums: List[int], k: int) -> List[int]:
+        myMap = defaultdict(int)
+        for values in nums:
+            myMap[values] += 1
+        
+        return [kv[0] for kv in sorted(myMap.items(), key=lambda kv: kv[1])][-k:]
+```
+Time complexity: O(n log n)
+
+Space complexity: O(n)
+
+### Bucket Sort
+
+```python
+class Solution:
+    def topKFrequent(self, nums: List[int], k: int) -> List[int]:
+        # bucketsort
+        arr = [] # first I make the buckets with an empty array containing each index 
+        for _ in range(len(nums) + 1):
+            arr.append([])
+        
+        # I make a hashMap to store all the values in nums as keys and its frequency as the value
+        myMap = defaultdict(int)
+        for values in nums:
+            myMap[values] += 1
+        
+        # I populate the array (buckets) with the keys corresponding to the value index 
+        for key in myMap:
+            arr[myMap[key]].append(key)
+            
+        # I grab the top k elements by going through all of the array from end index (used a while loop)
+        output = []
+        cnt = k
+        arrCnt = len(nums)
+        while cnt > 0:
+            if arr[arrCnt]:  # Check if list is not empty
+                for num in arr[arrCnt]:  # Iterate through the list
+                    output.append(num)
+                    cnt -= 1
+                    if cnt == 0:
+                        break
+            arrCnt -= 1  # Move to next frequency
+            
+        return output
+```
+
+Time complexity: O(n)
+
+Space complexity: O(n)
+
+## Encode and Decode Strings
+
+A delimiter is a indicator that separates words from each other. I first thought of the input of why can't we just indicate the words from just each length such as 3word4make something like that but I soon realize if the word goes double digit, it will be impossible to see if the word includes the next digit such as 2we3say1:3yes10!@#$%^&*(). Here we don't know if it's a 1 or a 10. Therefore we need a delimter to indicate that a new word is starting. In my case, I chose a "#". The number left to it indicates the length of the word, the symbols to the right of it indicates the word itself.
+
+```python
+class Solution:
+    def encode(self, strs: List[str]) -> str:
+        output = ""
+        for words in strs:
+            output += str(len(words)) + "#" + words  # Add delimiter
+        return output
+
+    def decode(self, s: str) -> List[str]:
+        original = []
+        i = 0
+        while i < len(s):
+            j = s.find('#', i) # Find '#' starting from position i
+            length = int(s[i:j]) # get the length
+            original.append(s[j + 1: j + 1 + length]) # append the word
+            i = j + 1 + length # move the i
+        return original
+```
+
+Time Complexity: O(n)
+
+Space Complexity: O(n)
