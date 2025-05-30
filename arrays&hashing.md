@@ -219,3 +219,109 @@ class Solution:
 Time Complexity: O(n)
 
 Space Complexity: O(n)
+
+# Day 3
+
+## Products of Array Except Self
+
+* First pass (prefix): For each position, we store the product of all numbers to the left
+* Second pass (suffix): We multiply each position by the product of all numbers to the right
+
+```python
+def productExceptSelf(nums: List[int]) -> List[int]:
+    n = len(nums)
+    output = [1] * n
+    
+    # Calculate prefix products
+    prefix = 1
+    for i in range(n):
+        output[i] = prefix
+        prefix *= nums[i]
+    
+    # Calculate suffix products and combine with prefix
+    suffix = 1
+    for i in range(n-1, -1, -1):
+        output[i] *= suffix
+        suffix *= nums[i]
+    
+    return output
+```
+
+![Screenshot](./prefix.png)
+
+Time Complexity: O(n)
+
+Space Complexity: O(n)
+
+## Valid Sudoku
+
+Map keys into valid row, column, and box key into a single hashMap
+
+```python
+class Solution:
+    def isValidSudoku(self, board: List[List[str]]) -> bool:
+        myMap = defaultdict(set)
+
+        for i in range(9):
+            for j in range(9):
+                if board[i][j] == ".": # Skip unfilled cells
+                    continue
+
+                # Create tuple keys for row, column, and box
+                row_key = (i, -1)
+                column_key = (-1, j)
+                box_key = (i // 3, j //3) # this maps to corresponding box as 0, 0 or 1, 1
+
+                # Check if number exists in row, column, or box
+                if board[i][j] in myMap[row_key]:
+                    return False
+                if board[i][j] in myMap[column_key]:
+                    return False
+                if board[i][j] in myMap[box_key]:
+                    return False
+
+                # Add number to corresponding sets
+                myMap[row_key].add(board[i][j])
+                myMap[column_key].add(board[i][j])
+                myMap[box_key].add(board[i][j])
+
+        return True
+```
+
+Time Complexity: O(9 * 9)
+
+Space Complexity: O(9 * 9)
+
+## Longest Consecutive Sequence
+
+```python
+def longestConsecutive(nums: List[int]) -> int:
+    mp = defaultdict(int)  # Map to store length of consecutive sequence for each number
+    res = 0  # Track the maximum length found
+
+    for num in nums:
+        # Only process if we haven't seen this number before
+        if not mp[num]:
+            # Get the length of consecutive sequences on both sides
+            # mp[num-1] gives length of sequence ending at num-1
+            # mp[num+1] gives length of sequence starting at num+1
+            # Add 1 for the current number
+            mp[num] = mp[num - 1] + mp[num + 1] + 1
+            
+            # Update the length at the start of the sequence
+            # num - mp[num-1] is the start of the left sequence
+            mp[num - mp[num - 1]] = mp[num]
+            
+            # Update the length at the end of the sequence
+            # num + mp[num+1] is the end of the right sequence
+            mp[num + mp[num + 1]] = mp[num]
+            
+            # Update the maximum length if needed
+            res = max(res, mp[num])
+    
+    return res
+```
+
+Time Complexity: O(n)
+
+Space Complexity: O(n)

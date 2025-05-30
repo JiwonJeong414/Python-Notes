@@ -122,3 +122,8 @@ print(myMap)
 # Clear hashmap
 myMap.clear()
 print(myMap)
+
+# duplicate
+
+if number in myMap[i]:
+    print(false)
